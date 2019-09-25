@@ -32,7 +32,7 @@ def inference(images, batch_size, n_classes):
         norm1 = tf.nn.lrn(pool1, depth_radius=4, bias=1.0, alpha=0.001 / 9.0, beta=0.75, name='norm1')
 
     # 卷积层2
-    # 50个3x3的卷积核，padding=’SAME’，表示padding后卷积的图与原图尺寸一致，激活函数relu()
+    # 100个3x3的卷积核，输出32维度，padding=’SAME’，表示padding后卷积的图与原图尺寸一致，激活函数relu()
     with tf.variable_scope('conv2') as scope:
         weights = tf.Variable(tf.truncated_normal(shape=[3, 3, 100, 32], stddev=0.1, dtype=tf.float32),
                               name='weights', dtype=tf.float32)
@@ -44,7 +44,7 @@ def inference(images, batch_size, n_classes):
         pre_activation2 = tf.nn.bias_add(conv, biases)
         conv2 = tf.nn.relu(pre_activation2, name='conv2')
 
-    # 卷积3  30维度
+    # 卷积3  输出16维度
     with tf.variable_scope('conv3') as scope:
         weights = tf.Variable(tf.truncated_normal(shape=[3, 3, 32, 16], stddev=0.1, dtype=tf.float32),
         name='weights', dtype=tf.float32)
@@ -55,7 +55,7 @@ def inference(images, batch_size, n_classes):
         conv = tf.nn.conv2d(conv2, weights, strides=[1, 1, 1, 1], padding='SAME')
         pre_activation3 = tf.nn.bias_add(conv, biases)
         conv3 = tf.nn.relu(pre_activation3, name='conv3')
-    # 卷积4 15维度
+    # 卷积4 输出10维度
     with tf.variable_scope('conv4') as scope:
         weights = tf.Variable(tf.truncated_normal(shape=[3, 3, 16, 10], stddev=0.1, dtype=tf.float32),
                                   name='weights', dtype=tf.float32)
@@ -66,7 +66,7 @@ def inference(images, batch_size, n_classes):
         conv = tf.nn.conv2d(conv3, weights, strides=[1, 1, 1, 1], padding='SAME')
         pre_activation4 = tf.nn.bias_add(conv, biases)
         conv4 = tf.nn.relu(pre_activation4, name='conv4')
-    #卷积5 12维度
+    #卷积5 输出7维度
     with tf.variable_scope('conv5') as scope:
         weights = tf.Variable(tf.truncated_normal(shape=[3, 3, 10, 7], stddev=0.1, dtype=tf.float32),
                                   name='weights', dtype=tf.float32)
